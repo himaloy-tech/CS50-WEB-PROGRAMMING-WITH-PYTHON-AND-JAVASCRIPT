@@ -3,23 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Search</title>
+    <title>Google</title>
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
     <div class="link">
         <a href="image_search.html">
-            <h4 style="text-align: left; color: rgb(243, 74, 74);">Image Search</h4><br>
+            <h4 style="text-align: right; color: rgb(243, 74, 74);">Image Search</h4><br>
         </a>
         <a href="advanced_search.html">
-            <h4 style="text-align: left; color: rgb(243, 74, 74);">Advanced Search</h4>
+            <h4 style="text-align: right; color: rgb(243, 74, 74);">Advanced Search</h4>
         </a>
     </div>
     <center>
         <form action="https://google.com/search">
-            <input class="bar" type="text" name="q" required><br>
+            <input class="bar" type="text" name="q"><br>
             <input class="button" type="submit" value="Google Search">
-            <button >I'm Feeling Lucky</button>
+            <a href="https://www.google.com/doodles/">
+                <button class="lucky" style="margin-left: 3px;" type="button">I'm Feeling Lucky</button>
+            </a>
         </form>
     </center>
 </body>
