@@ -1,0 +1,33 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+form{
+    margin-top: 230px;
+}
+h4{
+    margin-left: 10px;
+}
+.bar{
+    width: 400px;
+    outline: none;
+    border-radius: 50px;
+    background-color: white;
+}
+input[type="text"]{
+    font-size: 20px;
+    padding: 10px;
+}
+.button{
+    margin-top: 20px;
+    margin-bottom: 100%;
+    width: 130px;
+    height: 40px;
+    font-size: medium;
+}
+a{
+    text-decoration: none;
+}
+.link{
+    margin-top: 10px;
+}
