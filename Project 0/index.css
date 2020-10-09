@@ -1,21 +1,22 @@
+html{
+    overflow: hidden;
+}
 *{
     margin: 0;
     padding: 0;
 }
 
-form{
-    margin-top: 230px;
+.search{
+    margin-top: auto;
 }
 
 h4{
     margin-right: 10px;
 }
-
 .bar{
     width: 500px;
     outline: none;
     border-radius: 50px;
-    background-color: white;
 }
 
 input[type="text"]{
@@ -30,6 +31,9 @@ input[type="text"]{
     width: 130px;
     height: 40px;
     font-size: medium;
+    background-color: #f2f2f2;
+    border: 1px solid #f2f2f2;
+    outline: none;
 }
 
 a{
@@ -46,4 +50,7 @@ a{
     height: 40px;
     padding: 5px;
     font-size: medium;
+    background-color: #f2f2f2;
+    border: 1px solid #f2f2f2;
+    outline: none;
 }
