@@ -5,26 +5,23 @@ html{
     margin: 0;
     padding: 0;
 }
-
+input[type="submit"]{
+    color: rgb(73, 67, 67);
+}
 .search{
     margin-top: auto;
-}
-
-h4{
-    margin-right: 10px;
 }
 .bar{
     width: 500px;
     outline: none;
     border-radius: 50px;
+    border: 1px solid rgb(182, 180, 180);
 }
-
 input[type="text"]{
     font-size: 20px;
     font-weight: 0;
     padding: 10px;
 }
-
 .button{
     margin-top: 20px;
     margin-bottom: 100%;
@@ -35,15 +32,13 @@ input[type="text"]{
     border: 1px solid #f2f2f2;
     outline: none;
 }
-
 a{
     text-decoration: none;
+    color: black;
 }
-
 .link{
     margin-top: 10px;
 }
-
 .lucky{
     margin-top: 20px;
     margin-bottom: 100%;
@@ -53,4 +48,5 @@ a{
     background-color: #f2f2f2;
     border: 1px solid #f2f2f2;
     outline: none;
+    color: rgb(73, 67, 67);
 }
