@@ -10,9 +10,11 @@ def index(request):
 
 def details(request, title):
     detail = util.get_entry(title=title)
+    normal = detail.replace(f'# {title}', '')
     if detail != None:
         return render(request, "encyclopedia/details.html", {
-            "details": detail
+            "title":title,
+            "text":normal.split(),
         })
     else:
         return HttpResponse("Page not found")
