@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
 
 from . import util
 
@@ -16,5 +16,24 @@ def details(request, title):
             "title":title,
             "text":normal.split(),
         })
+    else:
+        return HttpResponse("Page not found")
+
+def search(request):
+    if request.method == "GET":
+        query = request.GET.get('q')
+        result = util.get_entry(title=query)
+        if result is not None:
+            return redirect(f'/details/{query}')
+        else:
+            results = []
+            for entry in util.list_entries():
+                if query in entry:
+                    results.append(entry)
+                else:
+                    continue
+            return render(request, 'encyclopedia/results.html', context={
+                "results":results
+            })
     else:
         return HttpResponse("Page not found")
