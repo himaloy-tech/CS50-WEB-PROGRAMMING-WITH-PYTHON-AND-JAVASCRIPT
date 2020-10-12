@@ -1,0 +1,11 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+  Details
+{% endblock %}
+
+{% block body %}
+  {% for detail in details %}
+    {{detail}}
+  {% endfor %}
+{% endblock %}
