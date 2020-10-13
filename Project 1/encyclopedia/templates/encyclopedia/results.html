@@ -3,9 +3,13 @@
   Results
 {% endblock %}
 {% block body %}
-  {% for item in results %}
-  <ul>
-      <li><a href="{% url 'details' item %}">{{ item }}</a></li>
-  </ul>
-  {% endfor %}
+  {% if results|length == 0 %}
+    <h1>No Search Results Found</h1>
+  {% else %}
+    {% for item in results %}
+      <ul>
+        <li><a href="{% url 'details' item %}">{{ item }}</a></li>
+      </ul>
+    {% endfor %}
+  {% endif %}
 {% endblock %}
