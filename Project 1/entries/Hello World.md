@@ -1,1 +1,0 @@
-Hello is used to greet people

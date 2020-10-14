@@ -45,19 +45,34 @@ def create(request):
     if request.method == "POST":
         title = request.POST.get('title')
         content = request.POST.get('content')
-        if util.get_entry(title=title) is not None:
-            messages.error(request, f"A entry with the name {title} already exists")
-            return redirect('/create')
-        else:
-            if "#" in title:
-                pass
-            else:
-                title = "# "+title
-            util.save_entry(title=title, content=content)
-            detail = util.get_entry(title=title.replace('# ', ''))
-            normal_text = markdown2.markdown(detail)
-            return render(request, 'encyclopedia/details.html', {
-                "text":normal_text,
-                "title":title
+        title_replaced = title.replace('# ', '')
+        if util.get_entry(title=title_replaced) is not None:
+            messages.error(request, f"A entry with the name {title_replaced} already exists")
+            return render(request, 'encyclopedia/add.html', {
+                "title":title,
+                "content":content
             })
+        else:
+            util.save_entry(title=title_replaced, content=title+"\n"+content)
+            title = title_replaced
+            return redirect(f'/details/{title}')
     return render(request, 'encyclopedia/add.html')
+
+def edit(request, title):
+    entry = util.get_entry(title=title)
+    if entry is None:
+        return HttpResponse("Page Not Found")
+    else:
+        return render(request, 'encyclopedia/edit.html', {
+            "title":title, 
+            "entry": entry 
+        })
+    
+def save_edit(request):
+    """
+    save
+    """
+    title = request.GET.get('title')
+    content = request.GET.get('content')
+    util.save_entry(title=title, content=content)
+    return redirect(f'details/{title}')
