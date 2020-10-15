@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponse, redirect
 import markdown2
 from django.contrib import messages
 from . import util
+from random import randint
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -76,3 +77,8 @@ def save_edit(request):
     content = request.GET.get('content')
     util.save_entry(title=title, content=content)
     return redirect(f'details/{title}')
+
+def random(request):
+    entries = util.list_entries()
+    choice = randint(0, len(entries))
+    return redirect(f'/details/{entries[choice]}')

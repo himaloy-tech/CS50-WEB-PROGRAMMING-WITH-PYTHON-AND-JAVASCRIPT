@@ -9,4 +9,5 @@ urlpatterns = [
     path('create', views.create, name="create"),
     path('edit/<str:title>', views.edit, name="edit-page"),
     path('save', views.save_edit, name="save-edit"),
+    path('random', views.random, name="random")
 ]
