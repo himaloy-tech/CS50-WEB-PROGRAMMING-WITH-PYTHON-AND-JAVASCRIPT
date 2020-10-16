@@ -19,7 +19,7 @@
     </style>
     <div>
         <form action="{% url 'create' %}" method="POST">{% csrf_token %}
-            <input type="text" class="text" name="title" placeholder="Title" value="{{title}}" required><br>
+            <input type="text" class="text" name="title" placeholder="Title" style="width: 41%;" value="{{title}}" required><br>
             {% if messages %}
                 {% for message in messages %}
                     <ul>
