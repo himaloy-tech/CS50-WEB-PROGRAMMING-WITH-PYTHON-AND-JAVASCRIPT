@@ -18,7 +18,7 @@ def details(request, title):
     if detail == None:
         return HttpResponse("Page Not Found")
     else:
-        normal_text = markdown2.markdown(detail)
+        normal_text = markdown2.markdown(detail.rstrip())
         return render(request, 'encyclopedia/details.html', {
             "text":normal_text,
             "title":title
@@ -46,16 +46,14 @@ def create(request):
     if request.method == "POST":
         title = request.POST.get('title')
         content = request.POST.get('content')
-        title_replaced = title.replace('# ', '')
-        if util.get_entry(title=title_replaced) is not None:
-            messages.error(request, f"A entry with the name {title_replaced} already exists")
+        if util.get_entry(title=title) is not None:
+            messages.error(request, f"A entry with the name {title} already exists")
             return render(request, 'encyclopedia/add.html', {
                 "title":title,
                 "content":content
             })
         else:
-            util.save_entry(title=title_replaced, content=title+"\n"+content)
-            title = title_replaced
+            util.save_entry(title=title, content=title+"\n"+content)
             return redirect(f'/details/{title}')
     return render(request, 'encyclopedia/add.html')
 
