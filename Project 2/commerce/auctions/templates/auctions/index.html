@@ -1,7 +1,27 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+<h2>Active Listings</h2>
 
-    TODO
+<section class="text-gray-700 body-font">
+    {% for item in Products %}
+    <div class="container px-5 py-24 mx-auto">
+        <div class="flex flex-wrap -m-4">
+            <div class="p-4 md:w-1/3">
+                <div class="h-full border-2 border-gray-200 rounded-lg overflow-hidden">
+                    <img class="lg:h-48 md:h-36 w-full object-cover object-center" style="object-fit: cover;" src="{{item.thumbnail.url}}"
+                    alt="blog">
+                    <div class="p-6">
+                        <h1 class="title-font text-lg font-medium text-gray-900 mb-3">{{item.title|truncatechars:35}}</h1>
+                        <p class="leading-relaxed mb-3">{{item.description|truncatechars:123}}</p>
+                        <a href="{% url 'details' item.id %}">
+                            <button class="btn btn-primary">Learn More</button>
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</section>
 {% endblock %}

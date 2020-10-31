@@ -4,11 +4,13 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Listings
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    return render(request, "auctions/index.html", {
+        "Products" : Listings.objects.all()
+    })
 
 
 def login_view(request):
@@ -61,3 +63,8 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+def details(request, id):
+    obj = Listings.objects.filter(id=id)
+    return render(request, 'details.html', {
+        "Details":obj
+    })
