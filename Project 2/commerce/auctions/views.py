@@ -66,6 +66,6 @@ def register(request):
 
 def details(request, id):
     obj = Listings.objects.filter(id=id)
-    return render(request, 'details.html', {
+    return render(request, 'auctions/details.html', {
         "Details":obj
     })

@@ -9,7 +9,7 @@
     <h1>Here are the search results</h1>
     {% for item in results %}
       <ul>
-        <li><a href="{% url 'details' item %}">{{ item }}</a></li>
+        <li><a href="{% url 'wiki' item %}">{{ item }}</a></li>
       </ul>
     {% endfor %}
   {% endif %}
