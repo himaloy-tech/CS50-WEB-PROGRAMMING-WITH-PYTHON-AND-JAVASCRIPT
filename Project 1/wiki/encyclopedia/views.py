@@ -16,7 +16,9 @@ def details(request, title):
     """
     detail = util.get_entry(title=title)
     if detail == None:
-        return HttpResponse("Page Not Found")
+        return render(request, 'encyclopedia/results.html', {
+            "results":[]
+        })
     else:
         normal_text = markdown2.markdown(detail.rstrip())
         return render(request, 'encyclopedia/details.html', {
