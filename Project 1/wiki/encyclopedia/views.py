@@ -28,7 +28,7 @@ def search(request):
     query = request.GET.get('q')
     result = util.get_entry(title=query)
     if result is not None:
-        return redirect(f'/details/{query}')
+        return redirect(f'/wiki/{query}')
     else:
         results = []
         for entry in util.list_entries():
@@ -54,7 +54,7 @@ def create(request):
             })
         else:
             util.save_entry(title=title, content=title+"\n"+content)
-            return redirect(f'/details/{title}')
+            return redirect(f'/wiki/{title}')
     return render(request, 'encyclopedia/add.html')
 
 def edit(request, title):
@@ -74,9 +74,9 @@ def save_edit(request):
     title = request.GET.get('title')
     content = request.GET.get('content')
     util.save_entry(title=title, content=content)
-    return redirect(f'details/{title}')
+    return redirect(f'wiki/{title}')
 
 def random(request):
     entries = util.list_entries()
     choice = randint(0, len(entries))
-    return redirect(f'/details/{entries[choice]}')
+    return redirect(f'/wiki/{entries[choice]}')
