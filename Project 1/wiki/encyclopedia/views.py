@@ -55,7 +55,7 @@ def create(request):
                 "content":content
             })
         else:
-            util.save_entry(title=title, content=title+"\n"+content)
+            util.save_entry(title=title, content=content)
             return redirect(f'/wiki/{title}')
     return render(request, 'encyclopedia/add.html')
 
