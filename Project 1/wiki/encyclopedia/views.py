@@ -62,7 +62,9 @@ def create(request):
 def edit(request, title):
     entry = util.get_entry(title=title)
     if entry is None:
-        return HttpResponse("Page Not Found")
+        return render(request, 'encyclopedia/results.html', {
+            "results":[]
+        })
     else:
         return render(request, 'encyclopedia/edit.html', {
             "title":title, 
