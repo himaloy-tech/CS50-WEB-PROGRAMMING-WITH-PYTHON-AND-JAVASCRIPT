@@ -69,3 +69,13 @@ def details(request, id):
     return render(request, 'auctions/details.html', {
         "Details":obj
     })
+
+def create_listings(request):
+    if request.method == "POST":
+        title = request.POST['title']
+        desc = request.POST.get('Description')
+        st_bid = request.POST['st_bid']
+        category = request.POST['category']
+        obj = Listings(title=title, description=desc, category=category, starting_bid=st_bid, user=request.user, thumbnail=request.FILES.get('thumbnail'))
+        obj.save()
+    return render(request, 'auctions/create.html')
