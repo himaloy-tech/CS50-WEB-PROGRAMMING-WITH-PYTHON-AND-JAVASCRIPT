@@ -76,6 +76,7 @@ def create_listings(request):
         desc = request.POST.get('Description')
         st_bid = request.POST['st_bid']
         category = request.POST['category']
-        obj = Listings(title=title, description=desc, category=category, starting_bid=st_bid, user=request.user, thumbnail=request.FILES.get('thumbnail'))
+        obj = Listings(title=title, description=desc, category=category, current_price=st_bid, user=request.user, thumbnail=request.FILES.get('thumbnail'))
         obj.save()
+        return HttpResponseRedirect(reverse("index"))
     return render(request, 'auctions/create.html')
