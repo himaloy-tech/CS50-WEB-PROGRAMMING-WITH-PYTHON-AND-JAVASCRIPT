@@ -1,12 +1,10 @@
 {% extends "auctions/layout.html" %}
-{% block body %}
 {% load static %}
-<center><h2>Active Listings</h2></center>
-<hr>
+{% block body %}
 <section class="text-gray-700 body-font">
     <div class="container">
         <div class="flex flex-wrap -m-4">
-            {% for item in Products %}
+            {% for item in All_Products %}
                 <div class="p-4 md:w-1/3">
                     <div class="h-full border-2 border-gray-200 rounded-lg overflow-hidden">
                         {% if item.thumbnail %}
@@ -34,6 +32,10 @@
                         </div>
                     </div>
                 </div>
+            {% empty %}
+            <center>
+                <h1>There is no item in your Watchlist</h1>
+            </center>
             {% endfor %}
         </div>
     </div>

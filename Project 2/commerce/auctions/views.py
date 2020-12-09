@@ -3,15 +3,21 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-
-from .models import User, Listings
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .models import User, Listings, Watchlist
 
 
 def index(request):
-    return render(request, "auctions/index.html", {
-        "Products" : Listings.objects.all()
-    })
-
+    if request.user.is_authenticated:
+        return render(request, "auctions/index.html", {
+            "Products" : Listings.objects.all(),
+            "watchlist": Watchlist.objects.filter(user=request.user)
+        })
+    else:
+        return render(request, "auctions/index.html", {
+            "Products" : Listings.objects.all()
+        })
 
 def login_view(request):
     if request.method == "POST":
@@ -60,15 +66,23 @@ def register(request):
                 "message": "Username already taken."
             })
         login(request, user)
+        watchlist_obj = Watchlist(user=user)
+        watchlist_obj.save()
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
 
 def details(request, id):
     obj = Listings.objects.filter(id=id)
-    return render(request, 'auctions/details.html', {
-        "Details":obj
-    })
+    if request.user.is_authenticated:
+        return render(request, 'auctions/details.html', {
+            "Details":obj,
+            "Already_in_watchlist": Watchlist.objects.filter(user=request.user, products=id).exists()
+        })
+    else:
+        return render(request, 'auctions/details.html', {
+            "Details":obj
+        })
 
 def create_listings(request):
     if request.method == "POST":
@@ -80,3 +94,41 @@ def create_listings(request):
         obj.save()
         return HttpResponseRedirect(reverse("index"))
     return render(request, 'auctions/create.html')
+
+@login_required(login_url="/login")
+def watchlist(request):
+    products = Watchlist.objects.get(user=request.user)
+    return render(request, 'auctions/watchlist.html', {
+        "Products": Watchlist.objects.filter(user=request.user),
+        "All_Products": products.products.all()
+    })
+
+@login_required(login_url="/login")
+def add_watchlist(request, pro_id):
+    if Watchlist.objects.filter(user=request.user, products=pro_id).exists():
+        messages.warning(request, "The item already exists in your watchlist")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        watchlist = Watchlist.objects.filter(user=request.user)
+        for watchlist_item in watchlist:
+            pass
+        product = Listings.objects.filter(id=pro_id)
+        for item in product:
+            watchlist_item.products.add(item)
+        messages.success(request, "Product Succesfully Added to watchlist")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url="/login")
+def remove_watchlist(request, pro_id):
+    if Watchlist.objects.filter(user=request.user).exists():
+        watchlist = Watchlist.objects.filter(user=request.user)
+        for watchlist_item in watchlist:
+            pass
+        product = Listings.objects.filter(id=pro_id)
+        for item in product:
+            watchlist_item.products.remove(item)
+        messages.success(request, "Product Succesfully Removed from watchlist")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        messages.warning(request, "The item does not exist in your watchlist")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

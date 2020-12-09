@@ -1,6 +1,13 @@
 {% extends "auctions/layout.html" %}
 {% block body %}
-  {% if not Details|length == 0 %}
+{% load static %}
+  {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+        {{message}}
+      </div>
+      {% endfor %}
+  {% endif %}
   {% for item in Details %}
   <section class="text-gray-700 body-font">
     <div class="container px-5 py-24 mx-auto flex flex-col">
@@ -10,7 +17,7 @@
             <img alt="content" class="object-cover object-center h-full w-full" src="{{item.thumbnail.url}}">
           {% endif %}
           {% if not item.thumbnail %}
-            <img class="lg:h-48 md:h-36 w-full object-center" src="auctions/images/no-image-available.jpg" alt="">
+            <img class="lg:h-48 md:h-36 w-full object-center" src="{% static "auctions/images/no-image-available.jpg" %}" alt="">
           {% endif %}
         </div>
         <center>
@@ -36,8 +43,22 @@
       </div>
     </div>
   </section>
-  {% endfor %}
-  {% else %}
-  <h1>Product not found</h1>
+  {% if user.is_authenticated %}    
+    {% if Already_in_watchlist %}
+    <center>
+      <a href="{% url 'remove_watchlist' item.id %}">
+        <button class="btn btn-danger">Remove item from WatchList</button>
+      </a>
+    </center>
+    {% else %}
+      <center>
+        <a href="{% url 'add_watchlist' item.id %}">
+          <button class="btn btn-primary">Add To WatchList</button>
+        </a>
+      </center>
+    {% endif %}
   {% endif %}
+  {% empty %}
+  <h1>Product not found</h1>
+  {% endfor %}
 {% endblock %}
