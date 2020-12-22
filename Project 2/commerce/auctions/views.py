@@ -11,8 +11,7 @@ from .models import User, Listings, Watchlist
 def index(request):
     if request.user.is_authenticated:
         return render(request, "auctions/index.html", {
-            "Products" : Listings.objects.all(),
-            "watchlist": Watchlist.objects.filter(user=request.user)
+            "Products" : Listings.objects.all()
         })
     else:
         return render(request, "auctions/index.html", {
@@ -132,3 +131,17 @@ def remove_watchlist(request, pro_id):
     else:
         messages.warning(request, "The item does not exist in your watchlist")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def category(request, ct):
+    if ct == " ":
+        return render(request, 'auctions/category.html', {
+            "Products" : Listings.objects.all()
+        })
+    else:
+        objects = Listings.objects.filter(category=ct)
+        if not objects.exists():
+            return HttpResponseRedirect(reverse("category", kwargs={"ct": " "}))
+        else:
+            return render(request, 'auctions/category.html', {
+                "Products": objects
+            })
