@@ -12,5 +12,6 @@ urlpatterns = [
     path("watchlist", views.watchlist, name="watchlist"),
     path("add_watchlist/<int:pro_id>", views.add_watchlist, name="add_watchlist"),
     path("remove_watchlist/<int:pro_id>", views.remove_watchlist, name="remove_watchlist"),
-    path("c/<str:ct>", views.category, name="category")
+    path("c/<str:ct>", views.category, name="category"),
+    path("PostComment/<int:pro_id>", views.PostComment, name="PostComment")
 ]

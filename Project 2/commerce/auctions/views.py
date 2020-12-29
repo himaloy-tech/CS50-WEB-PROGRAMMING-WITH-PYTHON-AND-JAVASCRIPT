@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import User, Listings, Watchlist
+from .models import User, Listings, Watchlist, Comments
 
 
 def index(request):
@@ -73,14 +73,18 @@ def register(request):
 
 def details(request, id):
     obj = Listings.objects.filter(id=id)
+    comments = Comments.objects.filter(listing__id=id)
     if request.user.is_authenticated:
         return render(request, 'auctions/details.html', {
             "Details":obj,
-            "Already_in_watchlist": Watchlist.objects.filter(user=request.user, products=id).exists()
+            "Already_in_watchlist": Watchlist.objects.filter(user=request.user, products=id).exists(),
+            "id":id,
+            "comments":comments
         })
     else:
         return render(request, 'auctions/details.html', {
-            "Details":obj
+            "Details":obj,
+            "comments":comments
         })
 
 def create_listings(request):
@@ -145,3 +149,14 @@ def category(request, ct):
             return render(request, 'auctions/category.html', {
                 "Products": objects
             })
+
+@login_required(login_url="/login")
+def PostComment(request, pro_id):
+    if request.method == "POST":
+        text = request.POST.get("text")
+        user = request.user
+        product = Listings.objects.get(id=pro_id)
+        obj = Comments(comment=text, user=user, listing=product)
+        obj.save()
+        messages.success(request, "Comment Posted Succesfully")
+        return HttpResponseRedirect(reverse("details", kwargs={"id":pro_id}))

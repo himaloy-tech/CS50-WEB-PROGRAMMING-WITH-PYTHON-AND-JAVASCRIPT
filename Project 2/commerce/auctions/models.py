@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
+from django.utils.timezone import now
 
 class User(AbstractUser):
     pass
@@ -19,5 +19,13 @@ class Listings(models.Model):
 class Watchlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     products = models.ManyToManyField(Listings)
+    def __str__(self):
+        return f"{self.user}"
+
+class Comments(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    listing = models.ForeignKey(Listings, on_delete=models.CASCADE)
+    comment = models.TextField()
+    time = models.DateTimeField(default=now)
     def __str__(self):
         return f"{self.user}"
