@@ -9,7 +9,7 @@ class Listings(models.Model):
     title = models.TextField()
     description = models.TextField()
     thumbnail = models.ImageField(upload_to='thumbnails', null=True, blank=True)
-    current_price = models.IntegerField()
+    base_price = models.IntegerField()
     choices = (("Fashion", "Fashion"), ("Electronics", "Electronics"), ("Furniture", "Furniture"), ("Daily Essentials", "Daily Essentials"))
     category = models.CharField(max_length = 100, choices=choices, blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -29,3 +29,9 @@ class Comments(models.Model):
     time = models.DateTimeField(default=now)
     def __str__(self):
         return f"{self.user}"
+
+class Bid(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bidders")
+    listing = models.ForeignKey(Listings, on_delete=models.CASCADE)
+    bid = models.IntegerField()
+    datetime = models.DateTimeField(default=now)

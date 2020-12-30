@@ -5,18 +5,14 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import User, Listings, Watchlist, Comments
+from .models import User, Listings, Watchlist, Comments, Bid
 
 
 def index(request):
-    if request.user.is_authenticated:
-        return render(request, "auctions/index.html", {
-            "Products" : Listings.objects.all()
-        })
-    else:
-        return render(request, "auctions/index.html", {
-            "Products" : Listings.objects.all()
-        })
+    products = Listings.objects.all()
+    return render(request, "auctions/index.html", {
+        "Products" : products
+    })
 
 def login_view(request):
     if request.method == "POST":
@@ -73,13 +69,23 @@ def register(request):
 
 def details(request, id):
     obj = Listings.objects.filter(id=id)
-    comments = Comments.objects.filter(listing__id=id)
+    comments = Comments.objects.filter(listing__id=id).order_by("-time")
+    bids = Bid.objects.filter(listing=Listings.objects.get(id=id))
+    prices = []
+    for item in bids:
+        prices.append(item.bid)
+    if len(prices) == 0:
+        for item in obj:
+            prices = item.base_price
+    else:
+        prices = max(prices)
     if request.user.is_authenticated:
         return render(request, 'auctions/details.html', {
             "Details":obj,
             "Already_in_watchlist": Watchlist.objects.filter(user=request.user, products=id).exists(),
+            "comments":comments,
             "id":id,
-            "comments":comments
+            "Prices":prices
         })
     else:
         return render(request, 'auctions/details.html', {
@@ -93,7 +99,7 @@ def create_listings(request):
         desc = request.POST.get('Description')
         st_bid = request.POST['st_bid']
         category = request.POST['category']
-        obj = Listings(title=title, description=desc, category=category, current_price=st_bid, user=request.user, thumbnail=request.FILES.get('thumbnail'))
+        obj = Listings(title=title, description=desc, category=category, base_price=st_bid, user=request.user, thumbnail=request.FILES.get('thumbnail'))
         obj.save()
         return HttpResponseRedirect(reverse("index"))
     return render(request, 'auctions/create.html')
@@ -160,3 +166,18 @@ def PostComment(request, pro_id):
         obj.save()
         messages.success(request, "Comment Posted Succesfully")
         return HttpResponseRedirect(reverse("details", kwargs={"id":pro_id}))
+
+@login_required(login_url="/login")
+def PlaceBid(request, pro_id):
+    if request.method == "POST":
+        price = int(request.POST.get("price"))
+        listing = Listings.objects.get(id=pro_id)
+        if listing is not None:
+            if price > listing.base_price:
+                obj = Bid(user=request.user, listing=listing, bid=price)
+                obj.save()
+                messages.success(request, "Succesfully placed bid")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            else:
+                messages.error(request, "Your bid was smaller than the current price")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

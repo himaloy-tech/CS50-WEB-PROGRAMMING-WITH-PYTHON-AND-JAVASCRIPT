@@ -59,6 +59,23 @@
       </center>
     {% endif %}
   {% endif %}
+  <hr>
+    {% if user.is_authenticated %}
+    <center>      
+      <form method="POST" action="{% url 'PlaceBid' id %}" class="m-4 p-4">{% csrf_token %}
+        <div class="form-group">
+          <!-- {% if Prices|length == 0 %}
+          <h3>Place Bid | Current Price: ${{base_price}}</h3>
+          {% else %}
+          {% endif %} -->
+          <h3>Place Bid | Current Price: ${{Prices}}</h3>
+          <input type="number" class="form-control" style="width: 700px;" id="price" name="price" placeholder="Enter the price">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </center>    
+    {% endif %}
+    <hr>
     {% if user.is_authenticated %}
     <center>      
       <form method="POST" action="{% url 'PostComment' id %}" class="m-4 p-4">{% csrf_token %}
@@ -73,31 +90,32 @@
   {% empty %}
     <center><h1>Product not found</h1></center>
   {% endfor %}
+  
+
+
+
+
+
+
+
+
   {% for comment in comments %}
   <div class="comment-container theme--light">
     <div class="comments" >
-      <div >
+      <div>
         <div  class="card v-card v-sheet theme--light elevation-2">
           <div  class="header">
             <div  class="v-avatar avatar" style="height: 50px; width: 50px;"></div>
             <span  class="displayName title">{{comment.user.username}}</span> <span  class="displayName caption">{{comment.time}}</span></div>
-          <!---->
           <div  class="wrapper comment">
             <p>{{comment.comment}}</p>
           </div>
-          <div  class="actions">
-            <!---->
-            <!---->
-            <!---->
-          </div>
           <div  class="v-dialog__container" style="display: block;"></div>
-        </div>
-        <!---->
-        <div  class="answers">
-          <!---->
         </div>
       </div>
     </div>
   </div>
+  {% empty %}
+    <center><h2>No Comments Yet</h2></center>
   {% endfor %}
 {% endblock %}
