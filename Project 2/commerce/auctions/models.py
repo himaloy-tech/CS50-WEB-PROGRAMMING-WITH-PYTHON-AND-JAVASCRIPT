@@ -10,9 +10,11 @@ class Listings(models.Model):
     description = models.TextField()
     thumbnail = models.ImageField(upload_to='thumbnails', null=True, blank=True)
     base_price = models.IntegerField()
+    current_price = models.IntegerField(null=True, blank=True)
     choices = (("Fashion", "Fashion"), ("Electronics", "Electronics"), ("Furniture", "Furniture"), ("Daily Essentials", "Daily Essentials"))
     category = models.CharField(max_length = 100, choices=choices, blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    closed_listing = models.BooleanField(default=False)
     def __str__(self):
         return f"{self.title}"
 
