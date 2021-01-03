@@ -109,6 +109,8 @@
       {% endif %}
   {% endif %}
   <center>
+    {% if winner is not None %}
     <h1>Winner: {{winner}}</h1>
+    {% endif %}
   </center>
 {% endblock %}

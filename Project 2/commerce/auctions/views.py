@@ -91,6 +91,13 @@ def details(request, id):
                     "comments":comments,
                     "Already_in_watchlist": Watchlist.objects.filter(user=request.user, products=id).exists()
                 })
+            else:
+                messages.info(request, "This Listing has been closed")
+                return render(request, "auctions/details.html", {
+                    "item": listing,
+                    "comments":comments,
+                    "Already_in_watchlist": Watchlist.objects.filter(user=request.user, products=id).exists()
+                })
     else:
         return HttpResponseRedirect(reverse(request.META.get("HTTP_REFERER")))
 
