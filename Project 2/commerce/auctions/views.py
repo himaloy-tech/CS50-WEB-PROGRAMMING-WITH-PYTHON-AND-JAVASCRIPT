@@ -171,11 +171,13 @@ def PostComment(request, pro_id):
         text = request.POST.get("text")
         user = request.user
         product = Listings.objects.get(id=pro_id)
-        if product.exists():
+        if product is not None:
             obj = Comments(comment=text, user=user, listing=product)
             obj.save()
             messages.success(request, "Comment Posted Succesfully")
             return HttpResponseRedirect(reverse("details", kwargs={"id":pro_id}))
+        else:
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 @login_required(login_url="/login")
 def PlaceBid(request, pro_id):
