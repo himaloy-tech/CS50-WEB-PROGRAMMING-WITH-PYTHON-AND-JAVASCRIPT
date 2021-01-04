@@ -20,7 +20,7 @@ class Listings(models.Model):
 
 class Watchlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    products = models.ManyToManyField(Listings)
+    products = models.ManyToManyField(Listings, blank=True)
     def __str__(self):
         return f"{self.user}"
 
