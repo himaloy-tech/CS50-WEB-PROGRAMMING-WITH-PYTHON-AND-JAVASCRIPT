@@ -66,7 +66,7 @@ def register(request):
 
 def details(request, id):
     listing = Listings.objects.get(id=id)
-    comments = Comments.objects.filter(listing=listing)
+    comments = Comments.objects.filter(listing=listing, closed_listing=False)
     if listing is not None:
         if not listing.closed_listing:
             if request.user.is_authenticated:
