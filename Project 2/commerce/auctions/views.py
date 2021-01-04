@@ -185,7 +185,7 @@ def PlaceBid(request, pro_id):
         price = int(request.POST.get("price"))
         listing = Listings.objects.get(id=pro_id)
         if listing is not None:
-            if price > listing.base_price:
+            if price > listing.current_price:
                 obj = Bid(user=request.user, listing=listing, bid=price)
                 obj.save()
                 listing.current_price = price
