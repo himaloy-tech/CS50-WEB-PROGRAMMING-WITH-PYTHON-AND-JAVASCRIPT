@@ -10,7 +10,7 @@ from .models import User, Listings, Watchlist, Comments, Bid
 
 def index(request):
     return render(request, "auctions/index.html", {
-        "Products" : Listings.objects.all()
+        "Products" : Listings.objects.filter(closed_listing=False)
     })
 
 def login_view(request):
@@ -66,7 +66,7 @@ def register(request):
 
 def details(request, id):
     listing = Listings.objects.get(id=id)
-    comments = Comments.objects.filter(listing=listing, closed_listing=False)
+    comments = Comments.objects.filter(listing=listing)
     if listing is not None:
         if not listing.closed_listing:
             if request.user.is_authenticated:
@@ -178,6 +178,8 @@ def PostComment(request, pro_id):
             return HttpResponseRedirect(reverse("details", kwargs={"id":pro_id}))
         else:
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+    else:
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 @login_required(login_url="/login")
 def PlaceBid(request, pro_id):
