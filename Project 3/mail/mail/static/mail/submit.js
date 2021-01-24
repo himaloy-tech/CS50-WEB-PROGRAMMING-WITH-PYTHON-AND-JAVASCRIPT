@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function(){
           })
           .then(response => response.json())
           .then(result => {
+              console.log(result);
             if(result.status == 400){
                 message.style.display = 'block';
                 message.innerHTML = result;
