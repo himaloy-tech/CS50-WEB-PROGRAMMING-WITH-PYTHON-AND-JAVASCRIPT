@@ -12,15 +12,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: body
             })
         })
-            .then(response => response.json())
-            .then(result => {
-                console.log(result);
-                if (result.status == 400) {
-                    message.style.display = 'block';
-                    message.innerHTML = result;
-                } else {
-                    load_mailbox('sent');
-                }
-            });
+        .then(response => response.json())
+        .then(result => {
+            console.log(result);
+            if (result.status == 400) {
+                message.style.display = 'block';
+                message.innerHTML = result;
+            } else {
+                load_mailbox('sent');
+            }
+        });
     });
 });
