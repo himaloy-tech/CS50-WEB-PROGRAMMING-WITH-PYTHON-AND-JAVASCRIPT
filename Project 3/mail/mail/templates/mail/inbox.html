@@ -13,25 +13,20 @@
 
     <div id="emails-view">
     </div>
-    
-    <form>
-      <h3>New Email</h3>
-      <div class="alert alert-danger" role="alert" id="message"></div>
-      <div class="form-group">
-        <label for="exampleInputEmail1">Email address</label>
-        <input type="email" disabled class="form-control" id="your-email" value="{{request.user.email}}" aria-describedby="emailHelp">
-      </div>
-      <div class="form-group">
-        <label for="exampleInputPassword1">To:</label>
-        <input type="text" id="compose-recipients" class="form-control" placeholder="Recipients" required>
-      </div>
-      <div class="form-group">
-        <label for="exampleInputPassword1">Subject:</label>
-        <input type="text" id="compose-subject" class="form-control" placeholder="Subject" required>
-      </div>
-      <label for="exampleInputPassword1">Body:</label>
-      <textarea class="form-control" id="compose-body" placeholder="Body" required></textarea>
-      <button type="submit" class="btn btn-primary mt-3" id="submit_button">Submit</button>
+
+    <form id="compose-form">
+        <h3>New Email</h3>
+        <div class="form-group">
+            From: <input disabled class="form-control" value="{{ request.user.email }}">
+        </div>
+        <div class="form-group">
+            To: <input id="compose-recipients" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <input class="form-control" id="compose-subject" placeholder="Subject" required>
+        </div>
+        <textarea class="form-control" id="compose-body" placeholder="Body" required></textarea>
+        <input type="submit" class="btn btn-primary"/>
     </form>
 {% endblock %}
 
