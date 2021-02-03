@@ -25,9 +25,9 @@ function compose_email() {
 }
 
 function load_mailbox(mailbox) {
-
+  
   // Show the mailbox and hide other views
-
+  
   const emails_view = document.querySelector('#emails-view');
   emails_view.style.display = 'block';
   document.querySelector('form').style.display = 'none';
@@ -40,18 +40,66 @@ function load_mailbox(mailbox) {
       if(emails.length == 0){
         emails_view.innerHTML = '';
       } else{
+        emails_view.innerHTML = '';
         emails.forEach(email => {
-          let color = 'alert-light';
+          const div_element = document.createElement('div');
           if(email.read){
-            let color = 'alert-dark';
+            div_element.className = `alert alert-dark`;
+          } else{
+            div_element.className = `alert alert-light`;
           }
-          const element = `<a onclick="email_deatail(${email.id})"><div class="alert ${color}" role="alert" style="border:solid black 1px" ><h4 class="alert-heading">${email.subject}</h4>
+          div_element.style = "border:solid grey 1px";
+          const element = `<h4 class="alert-heading">${email.subject}</h4>
           <p>${email.sender}</p>
           <hr>
-          <p class="mb-0">${email.timestamp}</p>
-          </div></a>`;
-          emails_view.innerHTML = element;
+          <p class="mb-0">${email.timestamp}</p>`;
+          div_element.innerHTML = element;
+          div_element.addEventListener('click', () => detail(email.id));
+          emails_view.append(div_element);
         });
       }
     })
+  }
+  
+function detail(id){
+  fetch(`emails/${id}`)
+  .then(response => response.json())
+  .then(details => {
+    const emails_view = document.querySelector('#emails-view');
+    emails_view.innerHTML = '';
+    document.querySelector('h3').innerHTML = '';
+    const mail = document.createElement('div');
+    mail.className = 'jumbotron';
+    const text = `<h3>Subject : ${details.subject}</h3>
+    <p class="lead">Body : ${details.body}</p>
+    <hr class="my-4">
+    <p>Sender : ${details.sender}</p>
+    <p>Recipients : ${details.recipients}</p>
+    <p>Timestamp : ${details.timestamp}</p>`;
+    mail.innerHTML = text;
+    emails_view.append(mail);
+    fetch(`/emails/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+          read:true
+      })
+    })
+  })
+  .catch(error => {
+    console.log(error);
+  })
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
