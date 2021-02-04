@@ -54,15 +54,15 @@ function load_mailbox(mailbox) {
           <hr>
           <p class="mb-0">${email.timestamp}</p>`;
           div_element.innerHTML = element;
-          div_element.addEventListener('click', () => detail(email.id));
+          div_element.addEventListener('click', () => detail(email.id, mailbox));
           emails_view.append(div_element);
         });
       }
     })
   }
   
-function detail(id){
-  fetch(`emails/${id}`)
+function detail(id, mailbox){
+  fetch(`/emails/${id}`)
   .then(response => response.json())
   .then(details => {
     const emails_view = document.querySelector('#emails-view');
@@ -78,6 +78,21 @@ function detail(id){
     <p>Timestamp : ${details.timestamp}</p>`;
     mail.innerHTML = text;
     emails_view.append(mail);
+    const button = document.createElement('button');
+    if(details.archived){
+      button.className = 'btn btn-danger';
+      button.innerHTML = 'Unarchive';
+    } else{
+      button.className = 'btn btn-primary';
+      button.innerHTML = 'Archive';
+    }
+    button.addEventListener('click', () => {
+      archive(id, details.archived);
+      window.location.reload(true);
+    });
+    if(mailbox != "sent"){
+      emails_view.appendChild(button);
+    }
     fetch(`/emails/${id}`, {
       method: 'PUT',
       body: JSON.stringify({
@@ -90,7 +105,14 @@ function detail(id){
   })
 }
 
-
+function archive(id, value){
+  fetch(`/emails/${id}`, {
+    method:"PUT",
+    body:JSON.stringify({
+      archived: !value
+    }),
+  });
+}
 
 
 
