@@ -15,8 +15,17 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(response => response.json())
         .then(result => {
-            console.log(result);
-            load_mailbox('sent');
+            const message = document.querySelector('#message');
+            if(result.status != 201){
+                message.className = 'alert alert-danger';
+                message.style.display = 'block';
+                message.innerHTML = result.message;
+            } else{
+                message.className = 'alert alert-success';
+                message.style.display = 'block';
+                message.innerHTML = result.message;
+                load_mailbox('sent');
+            }
         });
     }
 });

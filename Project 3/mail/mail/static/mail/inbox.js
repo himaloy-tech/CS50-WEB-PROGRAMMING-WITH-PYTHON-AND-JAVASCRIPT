@@ -49,10 +49,10 @@ function load_mailbox(mailbox) {
             div_element.className = `alert alert-light`;
           }
           div_element.style = "border:solid grey 1px";
-          const element = `<h4 class="alert-heading">${email.subject}</h4>
-          <p>${email.sender}</p>
+          const element = `<h4 class="alert-heading" style="color:black">${email.subject}</h4>
+          <p style="color:black">${email.sender}</p>
           <hr>
-          <p class="mb-0">${email.timestamp}</p>`;
+          <p class="mb-0" style="color:black">${email.timestamp}</p>`;
           div_element.innerHTML = element;
           div_element.addEventListener('click', () => detail(email.id, mailbox));
           emails_view.append(div_element);
@@ -71,11 +71,11 @@ function detail(id, mailbox) {
       const mail = document.createElement('div');
       mail.className = 'jumbotron';
       const text = `<h3>Subject : ${details.subject}</h3>
-    <p class="lead">Body : ${details.body}</p>
+    <p class="lead"><b>Body : ${details.body}</b></p>
     <hr class="my-4">
-    <p>Sender : ${details.sender}</p>
-    <p>Recipients : ${details.recipients}</p>
-    <p>Timestamp : ${details.timestamp}</p>`;
+    <p><b>Sender : ${details.sender}</b></p>
+    <p><b>Recipients : ${details.recipients}</b></p>
+    <p><b>Timestamp : ${details.timestamp}</b></p>`;
       mail.innerHTML = text;
       emails_view.append(mail);
       const button = document.createElement('button');
@@ -88,7 +88,7 @@ function detail(id, mailbox) {
       }
       button.addEventListener('click', () => {
         archive(id, details.archived);
-        window.location.reload(true);
+        window.location.reload();
       });
       if (mailbox != "sent") {
         emails_view.appendChild(button);
