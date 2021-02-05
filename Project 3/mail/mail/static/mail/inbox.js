@@ -25,9 +25,9 @@ function compose_email() {
 }
 
 function load_mailbox(mailbox) {
-  
+
   // Show the mailbox and hide other views
-  
+
   const emails_view = document.querySelector('#emails-view');
   emails_view.style.display = 'block';
   document.querySelector('form').style.display = 'none';
@@ -37,15 +37,15 @@ function load_mailbox(mailbox) {
   fetch(`/emails/${mailbox}`)
     .then(response => response.json())
     .then(emails => {
-      if(emails.length == 0){
+      if (emails.length == 0) {
         emails_view.innerHTML = '';
-      } else{
+      } else {
         emails_view.innerHTML = '';
         emails.forEach(email => {
           const div_element = document.createElement('div');
-          if(email.read){
+          if (email.read) {
             div_element.className = `alert alert-dark`;
-          } else{
+          } else {
             div_element.className = `alert alert-light`;
           }
           div_element.style = "border:solid grey 1px";
@@ -59,62 +59,75 @@ function load_mailbox(mailbox) {
         });
       }
     })
-  }
-  
-function detail(id, mailbox){
+}
+
+function detail(id, mailbox) {
   fetch(`/emails/${id}`)
-  .then(response => response.json())
-  .then(details => {
-    const emails_view = document.querySelector('#emails-view');
-    emails_view.innerHTML = '';
-    document.querySelector('h3').innerHTML = '';
-    const mail = document.createElement('div');
-    mail.className = 'jumbotron';
-    const text = `<h3>Subject : ${details.subject}</h3>
+    .then(response => response.json())
+    .then(details => {
+      const emails_view = document.querySelector('#emails-view');
+      emails_view.innerHTML = '';
+      document.querySelector('h3').innerHTML = '';
+      const mail = document.createElement('div');
+      mail.className = 'jumbotron';
+      const text = `<h3>Subject : ${details.subject}</h3>
     <p class="lead">Body : ${details.body}</p>
     <hr class="my-4">
     <p>Sender : ${details.sender}</p>
     <p>Recipients : ${details.recipients}</p>
     <p>Timestamp : ${details.timestamp}</p>`;
-    mail.innerHTML = text;
-    emails_view.append(mail);
-    const button = document.createElement('button');
-    if(details.archived){
-      button.className = 'btn btn-danger';
-      button.innerHTML = 'Unarchive';
-    } else{
-      button.className = 'btn btn-primary';
-      button.innerHTML = 'Archive';
-    }
-    button.addEventListener('click', () => {
-      archive(id, details.archived);
-      window.location.reload(true);
-    });
-    if(mailbox != "sent"){
-      emails_view.appendChild(button);
-    }
-    fetch(`/emails/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify({
-          read:true
+      mail.innerHTML = text;
+      emails_view.append(mail);
+      const button = document.createElement('button');
+      if (details.archived) {
+        button.className = 'btn btn-danger';
+        button.innerHTML = 'Unarchive';
+      } else {
+        button.className = 'btn btn-primary';
+        button.innerHTML = 'Archive';
+      }
+      button.addEventListener('click', () => {
+        archive(id, details.archived);
+        window.location.reload(true);
+      });
+      if (mailbox != "sent") {
+        emails_view.appendChild(button);
+      }
+      const reply = document.createElement('button');
+      reply.className = 'btn btn-info ml-4';
+      reply.innerHTML = 'Reply';
+      reply.addEventListener('click', () => replybutton(details.sender, details.subject, details.body, details.timestamp));
+      emails_view.appendChild(reply);
+      fetch(`/emails/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          read: true
+        })
       })
     })
-  })
-  .catch(error => {
-    console.log(error);
-  })
+    .catch(error => {
+      console.log(error);
+    })
 }
 
-function archive(id, value){
+function archive(id, value) {
   fetch(`/emails/${id}`, {
-    method:"PUT",
-    body:JSON.stringify({
+    method: "PUT",
+    body: JSON.stringify({
       archived: !value
-    }),
+    })
   });
 }
 
-
+function replybutton(recipient, subject, body, timestamp){
+  compose_email();
+  const rp = document.querySelector('#compose-recipients').value = recipient;
+  const sub = document.querySelector('#compose-subject').value = `Re: ${subject}`;
+  if (subject.split(" ")[0] == "Re:") {
+    sub = document.querySelector('#compose-subject').value = `${subject}`;
+  }
+  const bd = document.querySelector('#compose-body').value = `${timestamp} ${recipient} wrote: ${body}`;
+}
 
 
 
