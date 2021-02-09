@@ -16,15 +16,12 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(result => {
             const message = document.querySelector('#message');
-            if(result.status != 201){
+            if(result.status == 201){
+                load_mailbox('sent');
+            } else{
                 message.className = 'alert alert-danger';
                 message.style.display = 'block';
-                message.innerHTML = result.message;
-            } else{
-                message.className = 'alert alert-success';
-                message.style.display = 'block';
-                message.innerHTML = result.message;
-                load_mailbox('sent');
+                message.innerHTML = result.error;
             }
         });
     }
