@@ -128,13 +128,3 @@ function replybutton(recipient, subject, body, timestamp){
   }
   const bd = document.querySelector('#compose-body').value = `${timestamp} ${recipient} wrote: ${body}`;
 }
-
-
-
-
-
-
-
-
-
-
