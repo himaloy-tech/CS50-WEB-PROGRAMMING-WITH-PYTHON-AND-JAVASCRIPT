@@ -121,10 +121,10 @@ function archive(id, value) {
 
 function replybutton(recipient, subject, body, timestamp){
   compose_email();
-  const rp = document.querySelector('#compose-recipients').value = recipient;
-  const sub = document.querySelector('#compose-subject').value = `Re: ${subject}`;
+  document.querySelector('#compose-recipients').value = recipient;
+  document.querySelector('#compose-subject').value = `Re: ${subject}`;
   if (subject.split(" ")[0] == "Re:") {
-    sub = document.querySelector('#compose-subject').value = `${subject}`;
+    document.querySelector('#compose-subject').value = `${subject}`;
   }
-  const bd = document.querySelector('#compose-body').value = `${timestamp} ${recipient} wrote: ${body}`;
+  document.querySelector('#compose-body').value = `${timestamp} ${recipient} wrote: ${body}`;
 }
