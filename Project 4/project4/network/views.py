@@ -8,7 +8,10 @@ from .models import User, Post
 
 
 def index(request):
-    return render(request, "network/index.html")
+    posts = Post.objects.all().order_by('-datetime')
+    return render(request, "network/index.html", context={
+        "posts":posts
+    })
 
 
 def login_view(request):
