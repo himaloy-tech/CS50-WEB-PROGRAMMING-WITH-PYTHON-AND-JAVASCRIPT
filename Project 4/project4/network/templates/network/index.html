@@ -6,10 +6,14 @@
             margin-left: 300px;
             margin-right: 300px;
         }
+        a{
+            text-decoration: none !important;;
+            color: black;
+        }
     </style>
     {% for post in posts %}
     <div class="alert alert-secondary" role="alert" id="alert">
-        <h4 class="alert-heading">{{post.user.username}}</h4>
+        <h4 class="alert-heading"><a href="{% url 'profile' post.user.username %}">{{post.user.username}}</a></h4>
         <p>{{post.body}}</p>
         <hr>
         <p class="mb-0">{{post.datetime}}</p>
