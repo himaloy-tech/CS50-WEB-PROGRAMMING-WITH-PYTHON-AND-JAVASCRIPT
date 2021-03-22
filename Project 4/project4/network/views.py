@@ -1,13 +1,9 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.db.models.aggregates import Count
-from django.db.models.fields import PositiveSmallIntegerField
-from django.db.models.query import prefetch_related_objects
 from django.http import HttpResponseRedirect
-from django.http.request import RawPostDataException
 from django.shortcuts import render
 from django.urls import reverse
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 from .models import User, Post, Follower, Following
 
 
@@ -107,6 +103,7 @@ def profile(request, username):
         "button":buttton,
         "check":check
         })
+
 @login_required(login_url="/login")
 def follow(request, username):
     user = User.objects.get(username=username)
@@ -120,3 +117,11 @@ def unfollow(request, username):
     followings = Following.objects.get(user=request.user)
     followings.user_following.remove(user)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url="/login")
+def following(request):
+    user_follower = Following.objects.get(user=request.user)
+    posts = Post.objects.filter(user__in=user_follower.user_following.all()).order_by('-datetime')
+    return render(request, "network/following.html", {
+        "posts":posts
+    })
