@@ -106,16 +106,26 @@ def profile(request, username):
 
 @login_required(login_url="/login")
 def follow(request, username):
+    current_user = request.user
     user = User.objects.get(username=username)
-    followings = Following.objects.get(user=request.user)
-    followings.user_following.add(user)
+
+    following_obj = Following.objects.get(user=current_user)
+    following_obj.user_following.add(user)
+
+    follower_obj = Follower.objects.get(user=user)
+    follower_obj.user_following.add(current_user)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @login_required(login_url="/login")
 def unfollow(request, username):
+    current_user = request.user
     user = User.objects.get(username=username)
-    followings = Following.objects.get(user=request.user)
-    followings.user_following.remove(user)
+
+    following_obj = Following.objects.get(user=current_user)
+    following_obj.user_following.remove(user)
+
+    follower_obj = Follower.objects.get(user=user)
+    follower_obj.user_following.remove(current_user)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @login_required(login_url="/login")
