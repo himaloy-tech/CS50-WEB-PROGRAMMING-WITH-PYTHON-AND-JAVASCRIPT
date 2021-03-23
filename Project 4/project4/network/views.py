@@ -1,16 +1,20 @@
 from django.contrib.auth import authenticate, login, logout
+from django.core import paginator
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from .models import User, Post, Follower, Following
-
+from django.core.paginator import Paginator
 
 def index(request):
     posts = Post.objects.all().order_by('-datetime')
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     return render(request, "network/index.html", {
-        "posts":posts
+        "posts": page_obj
     })
 
 
@@ -132,6 +136,9 @@ def unfollow(request, username):
 def following(request):
     user_follower = Following.objects.get(user=request.user)
     posts = Post.objects.filter(user__in=user_follower.user_following.all()).order_by('-datetime')
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     return render(request, "network/following.html", {
-        "posts":posts
+        "posts": page_obj
     })

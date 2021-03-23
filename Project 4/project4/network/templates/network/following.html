@@ -18,5 +18,56 @@
         <hr>
         <p class="mb-0">{{post.datetime}}</p>
     </div>
+    {% empty %}
+    <center>
+        <h2 class="mb-4">You are not Following any one</h2>
+    </center>
     {% endfor %}
+    <nav aria-label="Page navigation example" id="pagination">
+        <ul class="pagination justify-content-center pagination-lg">
+            {% if posts.has_previous %}              
+                <li class="page-item">
+                    <a class="page-link" href="?page={{posts.previous_page_number}}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            {% else %}            
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% for number in posts.paginator.page_range %}
+                {% if posts.number == number %}
+                    <li class="page-item active"><a class="page-link" href="">{{posts.number}}</a></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{number}}">{{number}}</a></li>
+                {% endif %}            
+            {% endfor %}
+
+            {% if posts.has_next %}              
+                <li class="page-item">
+                    <a class="page-link" href="?page={{posts.next_page_number}}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            {% else %}  
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endblock %}
+
+{% block script %}
+  <script>
+      if (document.querySelector("h2").innerHTML == "You are not Following any one"){
+        document.querySelector("#pagination").style.display = "none";
+      }
+  </script>
 {% endblock %}
