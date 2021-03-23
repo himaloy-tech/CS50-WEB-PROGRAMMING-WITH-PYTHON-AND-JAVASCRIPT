@@ -1,61 +1,94 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    <style>
-        #alert{
-            margin-left: 300px;
-            margin-right: 300px;
-        }
-        a{
-            text-decoration: none !important;;
-            color: black;
-        }
-    </style>
-    {% for post in posts %}
-    <div class="alert alert-secondary" role="alert" id="alert">
-        <h4 class="alert-heading"><a href="{% url 'profile' post.user.username %}">{{post.user.username}}</a></h4>
-        <p>{{post.body}}</p>
-        <hr>
-        <p class="mb-0">{{post.datetime}}</p>
-    </div>
-    {% endfor %}
-    <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center pagination-lg">
-            {% if posts.has_previous %}              
-                <li class="page-item">
-                    <a class="page-link" href="?page={{posts.previous_page_number}}" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-            {% else %}            
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-            {% endif %}
+<style>
+    #alert {
+        margin-left: 300px;
+        margin-right: 300px;
+    }
 
-            {% for number in posts.paginator.page_range %}
-                {% if posts.number == number %}
-                    <li class="page-item active"><a class="page-link" href="">{{posts.number}}</a></li>
-                {% else %}
-                    <li class="page-item"><a class="page-link" href="?page={{number}}">{{number}}</a></li>
-                {% endif %}            
-            {% endfor %}
+    a {
+        text-decoration: none !important;
+        ;
+        color: black;
+    }
+</style>
+{% for post in posts %}
+<div class="alert alert-secondary" role="alert" id="alert">
+    <h4 class="alert-heading"><a href="{% url 'profile' post.user.username %}">{{post.user.username}}</a></h4>
+    {% if request.user.username == post.user.username %}
+    <h5 style="color: rgb(101, 101, 236);cursor:pointer;" onclick="edit({{post.id}})">Edit</h5>
+    {% endif %}
+    <p>{{post.body}}</p>
+    <hr>
+    <p class="mb-0">{{post.datetime}}</p>
+</div>
+{% endfor %}
+<nav aria-label="Page navigation example" id="pagination">
+    <ul class="pagination justify-content-center pagination-lg">
+        {% if posts.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{posts.previous_page_number}}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% endif %}
 
-            {% if posts.has_next %}              
-                <li class="page-item">
-                    <a class="page-link" href="?page={{posts.next_page_number}}" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            {% else %}  
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            {% endif %}
-        </ul>
-    </nav>
+        {% for number in posts.paginator.page_range %}
+        {% if posts.number == number %}
+        <li class="page-item active"><a class="page-link" href="">{{posts.number}}</a></li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="?page={{number}}">{{number}}</a></li>
+        {% endif %}
+        {% endfor %}
+
+        {% if posts.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{posts.next_page_number}}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+
+<form class="m-4" style="display: none;" action="{% url 'edit' %}" method="POST"> {% csrf_token %}
+    <center>
+        <textarea style="width: 857px;" name="textarea" id="textarea" cols="30" rows="10"></textarea>
+    </center>
+    <input type="text" hidden id="id" name="id">
+    <center>
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </center>
+</form>
+{% endblock %}
+
+{% block script %}
+<script>
+    function edit(id) {
+        fetch(`/obj/${id}`)
+            .then(response => response.json())
+            .then(content => {
+                document.querySelectorAll("#alert").forEach(item => {
+                    item.style.display = "none";
+                });
+                document.querySelector("#pagination").style.display = "none";
+                document.querySelector("form").style.display = "block";
+                document.querySelector("textarea").value = content.body;
+                document.querySelector("#id").value = id;
+            })
+    }
+</script>
 {% endblock %}
