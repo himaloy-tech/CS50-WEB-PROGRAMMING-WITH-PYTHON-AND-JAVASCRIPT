@@ -155,3 +155,17 @@ def edit(request):
         obj.body = body
         obj.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def like(request, id, username):
+    user = User.objects.get(username=username)
+    post = Post.objects.get(id=id)
+    users = post.like_users.all()
+    if user in users:
+        post.like_users.remove(user)
+        post.like_num = post.like_num - 1
+        post.save()
+    else:
+        post.like_users.add(user)
+        post.like_num += 1
+        post.save()
+    return JsonResponse({"message": "Done"})

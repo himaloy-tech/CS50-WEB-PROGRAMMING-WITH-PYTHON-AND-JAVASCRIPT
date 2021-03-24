@@ -21,7 +21,13 @@
     {% endif %}
     <p>{{post.body}}</p>
     <hr>
-    <p class="mb-0">{{post.datetime}}</p>
+    {% if request.user in post.like_users.all %}
+    <p>{{post.datetime}}<button class="btn btn-danger float-right" data-id="{{post.id}}" data-username="{{post.user.username}}">UnLike</button>
+    {% else %}
+    <p>{{post.datetime}}<button class="btn btn-primary float-right" data-id="{{post.id}}" data-username="{{post.user.username}}">Like</button>
+    {% endif %}
+    <p style="text-align: right;" class="num">{{post.like_num}}</p>
+    </p>
 </div>
 {% endfor %}
 <nav aria-label="Page navigation example" id="pagination">
@@ -70,13 +76,19 @@
     </center>
     <input type="text" hidden id="id" name="id">
     <center>
-        <button class="btn btn-primary" type="submit">Submit</button>
+        <input class="btn btn-primary" type="submit" value="Submit">
     </center>
 </form>
 {% endblock %}
 
 {% block script %}
 <script>
+    posts = document.querySelectorAll("button");
+    posts.forEach((element) => {
+        element.addEventListener('click', () => {
+            like(element);
+        })
+    })
     function edit(id) {
         fetch(`/obj/${id}`)
             .then(response => response.json())
@@ -89,6 +101,24 @@
                 document.querySelector("textarea").value = content.body;
                 document.querySelector("#id").value = id;
             })
+    }
+    function like(element){
+        id = element.dataset.id;
+        username = element.dataset.username;
+        count = document.querySelector('.num');
+        fetch(`/like/${id}/${username}`)
+        .then(response => response.json())
+        .then(message => {
+            if (element.innerHTML == "Like"){
+                element.className = 'btn btn-danger float-right';
+                element.innerHTML = "Unlike";
+                count.innerHTML = parseInt(count.innerHTML) + 1;
+            } else{
+                element.className = 'btn btn-primary float-right';
+                element.innerHTML = "Like";
+                count.innerHTML = parseInt(count.innerHTML) - 1;
+            }
+        })
     }
 </script>
 {% endblock %}
