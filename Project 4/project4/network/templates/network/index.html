@@ -22,11 +22,11 @@
     <p>{{post.body}}</p>
     <hr>
     {% if request.user in post.like_users.all %}
-    <p>{{post.datetime}}<button class="btn btn-danger float-right" data-id="{{post.id}}" data-username="{{post.user.username}}">UnLike</button>
+    <p>{{post.datetime}}<button class="btn btn-danger float-right" data-id="{{post.id}}" data-current_username="{{request.user.username}}">UnLike</button>
     {% else %}
-    <p>{{post.datetime}}<button class="btn btn-primary float-right" data-id="{{post.id}}" data-username="{{post.user.username}}">Like</button>
+    <p>{{post.datetime}}<button class="btn btn-primary float-right" data-id="{{post.id}}" data-current_username="{{request.user.username}}">Like</button>
     {% endif %}
-    <p style="text-align: right;" class="num">{{post.like_num}}</p>
+    <p style="text-align: right;" id="{{post.id}}">{{post.like_num}}</p>
     </p>
 </div>
 {% endfor %}
@@ -83,42 +83,48 @@
 
 {% block script %}
 <script>
-    posts = document.querySelectorAll("button");
-    posts.forEach((element) => {
-        element.addEventListener('click', () => {
-            like(element);
-        })
-    })
-    function edit(id) {
-        fetch(`/obj/${id}`)
-            .then(response => response.json())
-            .then(content => {
-                document.querySelectorAll("#alert").forEach(item => {
-                    item.style.display = "none";
-                });
-                document.querySelector("#pagination").style.display = "none";
-                document.querySelector("form").style.display = "block";
-                document.querySelector("textarea").value = content.body;
-                document.querySelector("#id").value = id;
+    document.addEventListener('DOMContentLoaded', () => {
+        posts = document.querySelectorAll("button");
+        posts.forEach((element) => {
+            element.addEventListener('click', () => {
+                like(element);
             })
-    }
-    function like(element){
-        id = element.dataset.id;
-        username = element.dataset.username;
-        count = document.querySelector('.num');
-        fetch(`/like/${id}/${username}`)
-        .then(response => response.json())
-        .then(message => {
-            if (element.innerHTML == "Like"){
-                element.className = 'btn btn-danger float-right';
-                element.innerHTML = "Unlike";
-                count.innerHTML = parseInt(count.innerHTML) + 1;
-            } else{
-                element.className = 'btn btn-primary float-right';
-                element.innerHTML = "Like";
-                count.innerHTML = parseInt(count.innerHTML) - 1;
-            }
         })
-    }
+        function edit(id) {
+            fetch(`/obj/${id}`)
+                .then(response => response.json())
+                .then(content => {
+                    document.querySelectorAll("#alert").forEach(item => {
+                        item.style.display = "none";
+                    });
+                    document.querySelector("#pagination").style.display = "none";
+                    document.querySelector("form").style.display = "block";
+                    document.querySelector("textarea").value = content.body;
+                    document.querySelector("#id").value = id;
+                })
+        }
+        function like(element){
+            id = element.dataset.id;
+            current_user = element.dataset.current_username;
+            count = document.getElementById(`${id}`);
+            if (element.innerHTML == "Like"){
+                fetch(`/like/${id}/${current_user}`)
+                .then(response => response.json())
+                .then(message => {
+                    element.className = 'btn btn-danger float-right';
+                    element.innerHTML = "UnLike";
+                    count.innerHTML = message.like_num;
+                })
+            } else if(element.innerHTML == "UnLike"){
+                fetch(`/unlike/${id}/${current_user}`)
+                .then(response => response.json())
+                .then(message => {
+                    element.className = 'btn btn-primary float-right';
+                    element.innerHTML = "Like";
+                    count.innerHTML = message.like_num;
+                })
+            }
+        }
+    })
 </script>
 {% endblock %}

@@ -156,16 +156,18 @@ def edit(request):
         obj.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-def like(request, id, username):
-    user = User.objects.get(username=username)
+def like(request, id, current_user):
+    current_user = User.objects.get(username=current_user)
     post = Post.objects.get(id=id)
-    users = post.like_users.all()
-    if user in users:
-        post.like_users.remove(user)
-        post.like_num = post.like_num - 1
-        post.save()
-    else:
-        post.like_users.add(user)
-        post.like_num += 1
-        post.save()
-    return JsonResponse({"message": "Done"})
+    post.like_users.add(current_user)
+    post.like_num += 1
+    post.save()
+    return JsonResponse({"like_num": f"{post.like_num}"})
+
+def unlike(request, id, current_user):
+    current_user = User.objects.get(username=current_user)
+    post = Post.objects.get(id=id)
+    post.like_users.remove(current_user)
+    post.like_num -= 1
+    post.save()
+    return JsonResponse({"like_num": f"{post.like_num}"})

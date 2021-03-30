@@ -7,10 +7,12 @@ class User(AbstractUser):
 
 class Post(models.Model):
     body = models.TextField()
-    datetime = models.DateTimeField(auto_now=True)
+    datetime = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     like_num = models.IntegerField(default=0)
-    like_users = models.ManyToManyField(User, related_name="like_users")
+    like_users = models.ManyToManyField(User, related_name="like_users", blank=True)
+    def likes_as_flat_user_id_list(self):
+        return self.like_users.values_list('id', flat=True)
 
 class Follower(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_follower")
