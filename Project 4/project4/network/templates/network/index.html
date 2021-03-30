@@ -1,5 +1,4 @@
 {% extends "network/layout.html" %}
-
 {% block body %}
 <style>
     #alert {
@@ -17,7 +16,7 @@
 <div class="alert alert-secondary" role="alert" id="alert">
     <h4 class="alert-heading"><a href="{% url 'profile' post.user.username %}">{{post.user.username}}</a></h4>
     {% if request.user.username == post.user.username %}
-    <h5 style="color: rgb(101, 101, 236);cursor:pointer;" onclick="edit({{post.id}})">Edit</h5>
+    <h5 style="color: rgb(101, 101, 236);cursor:pointer;" data-id="{{post.id}}">Edit</h5>
     {% endif %}
     <p>{{post.body}}</p>
     <hr>
@@ -85,6 +84,12 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         posts = document.querySelectorAll("button");
+        edit_btn = document.querySelectorAll("h5");
+        edit_btn.forEach((element) => {
+            element.addEventListener('click', () => {
+                edit(element.dataset.id);
+            })
+        })
         posts.forEach((element) => {
             element.addEventListener('click', () => {
                 like(element);
