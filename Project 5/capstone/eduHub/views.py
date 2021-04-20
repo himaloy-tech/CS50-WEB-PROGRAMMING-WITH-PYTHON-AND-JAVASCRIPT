@@ -1,7 +1,6 @@
-from django import http
 from django.http.response import HttpResponseRedirect
-from django.shortcuts import render, redirect
-from .models import Course
+from django.shortcuts import render
+from .models import Course, Contact
 from django.contrib.auth import authenticate
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import login as auth_login
@@ -44,3 +43,15 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "register.html")
+
+def contact(request):
+    if request.method == "POST":
+        name = request.POST.get('name')
+        message = request.POST.get('message')
+        email = request.POST.get('email')
+        obj = Contact.objects.create(name=name, message=message, email=email, user=request.user)
+        obj.save()
+        messages.success(request, "Your Query has been Successfully Submitted")
+        return HttpResponseRedirect(reverse("index"))
+    else:
+        return render(request, "contact.html")
