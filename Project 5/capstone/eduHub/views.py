@@ -1,12 +1,10 @@
-from django.http.response import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponseRedirect
 from .models import Course, Contact
 from django.contrib.auth import authenticate
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.http import HttpResponseRedirect
 from django.urls import reverse
 # Create your views here.
 
