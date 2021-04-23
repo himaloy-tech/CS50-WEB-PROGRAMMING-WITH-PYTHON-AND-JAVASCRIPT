@@ -53,3 +53,14 @@ def contact(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "contact.html")
+
+def search(request):
+    if request.method == "POST":
+        query = request.POST.get('query')
+        object1 = Course.objects.filter(desc__icontains=query)
+        object2 = Course.objects.filter(title__icontains=query)
+        object3 = Course.objects.filter(category__icontains=query)
+        result = object1.union(object2, object3)
+        return render(request, "search.html", {
+            "results": result
+        })
