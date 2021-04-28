@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Course, Post, Contact
+from .models import Course, Post, Contact, User
 # Register your models here.
 
 class ContactAdmin(admin.ModelAdmin):
@@ -7,4 +7,5 @@ class ContactAdmin(admin.ModelAdmin):
 
 admin.site.register(Course)
 admin.site.register(Post)
+admin.site.register(User)
 admin.site.register(Contact, ContactAdmin)

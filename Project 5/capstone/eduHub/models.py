@@ -1,6 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 # Create your models here.
+
+class User(AbstractUser):
+    enrolled_courses = models.ManyToManyField('Course', blank=True)
 
 class Post(models.Model):
     title = models.TextField()
@@ -13,8 +16,9 @@ class Course(models.Model):
     desc = models.TextField()
     title = models.TextField(default="")
     category = models.TextField(default="")
-    posts = models.ManyToManyField(Post, blank=True, null=True)
+    posts = models.ManyToManyField(Post, blank=True)
     id = models.AutoField(primary_key=True)
+    enrolled_users = models.ManyToManyField(User, blank=True)
     def __str__(self) -> str:
         return f"{self.title}"
 

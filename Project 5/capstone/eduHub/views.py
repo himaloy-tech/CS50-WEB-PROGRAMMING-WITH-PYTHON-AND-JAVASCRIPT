@@ -1,9 +1,8 @@
 from django.shortcuts import render, HttpResponseRedirect
-from .models import Course, Contact
+from .models import Course, Contact, User
 from django.contrib.auth import authenticate
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import login as auth_login
-from django.contrib.auth.models import User
 from django.contrib import messages
 from django.urls import reverse
 # Create your views here.
@@ -63,4 +62,11 @@ def search(request):
         result = object1.union(object2, object3)
         return render(request, "search.html", {
             "results": result
+        })
+
+def profile(request, username):
+    if request.user.username == username:
+        user = User.objects.get(username=username)
+        return render(request, "profile.html", {
+            "courses":user.enrolled_courses.all()
         })
