@@ -18,7 +18,10 @@ class Course(models.Model):
     category = models.TextField(default="")
     posts = models.ManyToManyField(Post, blank=True)
     id = models.AutoField(primary_key=True)
-    enrolled_users = models.ManyToManyField(User, blank=True)
+    enrolled_users = models.ManyToManyField(User, blank=True, default='0')
+    def enrolled_count(self):
+        return self.enrolled_users.all().count()
+
     def __str__(self) -> str:
         return f"{self.title}"
 

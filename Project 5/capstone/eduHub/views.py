@@ -1,10 +1,11 @@
 from django.shortcuts import render, HttpResponseRedirect
-from .models import Course, Contact, User
+from .models import Course, Contact, Post, User
 from django.contrib.auth import authenticate
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import login as auth_login
 from django.contrib import messages
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def index(request):
@@ -70,3 +71,17 @@ def profile(request, username):
         return render(request, "profile.html", {
             "courses":user.enrolled_courses.all()
         })
+@login_required(login_url='/login')
+def enroll(request, id):
+    course = Course.objects.get(id=id)
+    if not request.user in course.enrolled_users.all():
+        print("Done1")
+        if not course in request.user.enrolled_courses.all():
+            print("Done2")
+
+            # Add to user enrolled courses
+            request.user.enrolled_courses.add(course)   
+            # Add to course enrolled users
+            course.enrolled_users.add(request.user)
+            messages.success(request, "Enrolled Successfully")
+            return HttpResponseRedirect(reverse("index"))
