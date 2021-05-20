@@ -8,6 +8,7 @@ class User(AbstractUser):
 class Post(models.Model):
     title = models.TextField()
     desc = models.TextField()
+    video = models.FileField(upload_to='videos', blank=True)
     def __str__(self) -> str:
         return f"{self.title}"
 
@@ -31,3 +32,6 @@ class Contact(models.Model):
     message = models.TextField()
     email = models.EmailField()
     datetime = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name}"

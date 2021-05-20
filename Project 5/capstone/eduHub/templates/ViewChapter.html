@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<style>
+  h2 {
+    padding: 20px;
+  }
+
+  p {
+    padding-top: 6px !important;
+    padding: 60px;
+  }
+</style>
+<center>
+  <h2 style="padding: 20px;">{{Post.title}}</h2>
+</center>
+<center>
+  <p>{{Post.desc}}</p>
+  {% if Post.video %}
+  <video width="400" controls>
+    <source src="{{Post.video.url}}" type="video/mp4">
+  </video>
+  {% endif %}
+</center>
+{% endblock %}

@@ -21,7 +21,9 @@
               <p class="leading-relaxed mb-3">{{course.desc}}</p>
               <div class="flex items-center flex-wrap ">
                 {% if request.user in course.enrolled_users.all %}
-                  <button type="button" class="btn btn-primary">View Material</button>
+                <a href="/viewMaterial/{{course.id}}">
+                  <button type="button" class="btn btn-info">View Material</button>
+                </a>
                 {% else %}
                   <a href="/enroll/{{course.id}}">
                     <button type="button" class="btn btn-success">Enroll</button>

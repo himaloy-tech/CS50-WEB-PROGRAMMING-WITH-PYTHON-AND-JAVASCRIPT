@@ -11,8 +11,9 @@
 {% endblock style %}
 
 {% block body %}
-<center><h1 class="username">{{request.user.username}}</h1></center>
+<center><h1 class="username" style="padding-bottom: 14px;">{{request.user.username}}</h1></center>
 <hr>
+<center><h1 class="username">Enrolled Courses</h1></center>
 <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 <section class="text-gray-600 body-font">
     <div class="container px-5 py-24 mx-auto">

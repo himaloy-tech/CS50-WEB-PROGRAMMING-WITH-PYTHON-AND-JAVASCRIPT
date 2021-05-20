@@ -29,7 +29,7 @@ def login(request):
 
 def logout(request):
     auth_logout(request)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return render(request, "login.html")
 
 def register(request):
     if request.method == "POST":
@@ -75,13 +75,30 @@ def profile(request, username):
 def enroll(request, id):
     course = Course.objects.get(id=id)
     if not request.user in course.enrolled_users.all():
-        print("Done1")
         if not course in request.user.enrolled_courses.all():
-            print("Done2")
-
-            # Add to user enrolled courses
             request.user.enrolled_courses.add(course)   
-            # Add to course enrolled users
             course.enrolled_users.add(request.user)
             messages.success(request, "Enrolled Successfully")
             return HttpResponseRedirect(reverse("index"))
+
+@login_required(login_url='/login')
+def viewMaterial(request, id):
+    course = Course.objects.get(id=id)
+    user = request.user
+    if user in course.enrolled_users.all():
+        if course in user.enrolled_courses.all():
+            return render(request, "CourseIndexPage.html", {
+                "Posts" : course.posts.all(),
+                "courseId": course.id
+            })
+
+@login_required(login_url='/login')
+def ViewChapter(request, courseId, postId):
+    course = Course.objects.get(id=courseId)
+    post = Post.objects.get(id=postId)
+    user = request.user
+    if user in course.enrolled_users.all():
+        if course in user.enrolled_courses.all():
+            return render(request, "ViewChapter.html", {
+                "Post": post
+            })

@@ -5,7 +5,9 @@ from .models import Course, Post, Contact, User
 class ContactAdmin(admin.ModelAdmin):
     list_display = ('name', 'user', 'datetime')
 
+class PostAdmin(admin.ModelAdmin):
+    list_display = ('title', )
 admin.site.register(Course)
-admin.site.register(Post)
+admin.site.register(Post, PostAdmin)
 admin.site.register(User)
 admin.site.register(Contact, ContactAdmin)
