@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponseRedirect
-from .models import Course, Contact, Post, User
+from .models import Course, Contact, Post, User, Comment
 from django.contrib.auth import authenticate
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import login as auth_login
@@ -55,8 +55,8 @@ def contact(request):
         return render(request, "contact.html")
 
 def search(request):
-    if request.method == "POST":
-        query = request.POST.get('query')
+    if request.method == "GET":
+        query = request.GET.get('query')
         object1 = Course.objects.filter(desc__icontains=query)
         object2 = Course.objects.filter(title__icontains=query)
         object3 = Course.objects.filter(category__icontains=query)
@@ -100,5 +100,16 @@ def ViewChapter(request, courseId, postId):
     if user in course.enrolled_users.all():
         if course in user.enrolled_courses.all():
             return render(request, "ViewChapter.html", {
-                "Post": post
+                "Post": post,
+                "comments": Comment.objects.filter(post__id=postId)
             })
+
+@login_required(login_url='/login')
+def PostComment(request):
+    if request.method == "POST":
+        text = request.POST.get('text')
+        id = request.POST.get('postId')
+        comment = Comment(user=request.user, post=Post.objects.get(id=id), comment=text)
+        comment.save()
+        messages.success(request, "Comment Successfully posted.")
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))

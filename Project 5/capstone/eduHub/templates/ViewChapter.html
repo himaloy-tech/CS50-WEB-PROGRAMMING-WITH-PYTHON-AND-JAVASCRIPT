@@ -1,6 +1,8 @@
 {% extends "layout.html" %}
 
 {% block body %}
+{% load static %}
+<link rel="stylesheet" href="{% static "comment.css" %}">
 <style>
   h2 {
     padding: 20px;
@@ -17,9 +19,40 @@
 <center>
   <p>{{Post.desc}}</p>
   {% if Post.video %}
-  <video width="400" controls>
+  <video width="350" controls>
     <source src="{{Post.video.url}}" type="video/mp4">
   </video>
   {% endif %}
 </center>
+<hr>
+{% if user.is_authenticated %}
+  <form action="/PostComment" method="POST">{% csrf_token %}
+    <div class="form-group" style="margin: 27px;">
+      <h3>Post a Comment</h3>
+      <input type="number" name="postId" id="postId" value="{{Post.id}}" hidden>
+      <input type="text" class="form-control" id="text" name="text" placeholder="Enter Text">
+      <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Submit</button>
+    </div>
+  </form>
+{% endif %}
+<hr>
+{% for comment in comments %}
+<div class="comment-container theme--light">
+  <div class="comments" >
+    <div>
+      <div  class="card v-card v-sheet theme--light elevation-2">
+        <div  class="header">
+          <div  class="v-avatar avatar" style="height: 50px; width: 50px;"></div>
+          <span  class="displayName title">{{comment.user.username}}</span> <span  class="displayName caption">{{comment.time}}</span></div>
+        <div  class="wrapper comment">
+          <p>{{comment.comment}}</p>
+        </div>
+        <div  class="v-dialog__container" style="display: block;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% empty %}
+  <center><h2>No Comments Yet</h2></center>
+{% endfor %}
 {% endblock %}

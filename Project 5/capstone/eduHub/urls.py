@@ -10,5 +10,6 @@ urlpatterns = [
     path("profile/<str:username>", views.profile, name="profile"),
     path("enroll/<int:id>", views.enroll, name="enroll"),
     path("viewMaterial/<int:id>", views.viewMaterial, name="viewMaterial"),
-    path("ViewChapter/<int:courseId>/<int:postId>", views.ViewChapter, name="ViewChapter")
+    path("ViewChapter/<int:courseId>/<int:postId>", views.ViewChapter, name="ViewChapter"),
+    path("PostComment", views.PostComment, name="comment")
 ]
