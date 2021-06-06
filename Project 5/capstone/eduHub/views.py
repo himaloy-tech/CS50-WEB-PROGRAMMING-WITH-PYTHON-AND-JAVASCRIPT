@@ -114,7 +114,6 @@ def PostComment(request):
         response_data['text'] = text
         response_data['postId'] = id
         response_data['username'] = user
-        print(response_data)
         user = User.objects.get(username=user)
         comment = Comment(user=user, post=Post.objects.get(id=id), comment=text)
         comment.save()
