@@ -57,7 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
             postId: postId.toString(),
             user: username.toString()
         };
-        console.log(data);
         $.ajax({
             type: 'POST',
             url: '/PostComment',
@@ -68,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector('#alert-message').innerHTML = json.message;
                 document.querySelector('#al').style.display = 'block';
                 $('.alert').show();
+                window.scrollTo(0, 0);
             }
         });
         return false;
