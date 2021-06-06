@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.utils.timezone import now
 # Create your models here.
 
 class User(AbstractUser):
@@ -41,6 +40,14 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     comment = models.TextField()
-    time = models.DateTimeField(default=now)
+    time = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return f"{self.user}"
+    
+    def serialize(self):
+        context = {
+            "username" : self.user.username,
+            "comment" : self.comment,
+            "time" : self.time
+        }
+        return context

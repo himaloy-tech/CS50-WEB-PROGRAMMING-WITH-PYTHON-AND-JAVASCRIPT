@@ -6,6 +6,7 @@ from django.contrib.auth import login as auth_login
 from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 # Create your views here.
 
 def index(request):
@@ -101,15 +102,26 @@ def ViewChapter(request, courseId, postId):
         if course in user.enrolled_courses.all():
             return render(request, "ViewChapter.html", {
                 "Post": post,
-                "comments": Comment.objects.filter(post__id=postId)
+                "postId" : postId
             })
 
-@login_required(login_url='/login')
 def PostComment(request):
     if request.method == "POST":
+        response_data = {}
         text = request.POST.get('text')
         id = request.POST.get('postId')
-        comment = Comment(user=request.user, post=Post.objects.get(id=id), comment=text)
+        user = request.POST.get('user')
+        response_data['text'] = text
+        response_data['postId'] = id
+        response_data['username'] = user
+        print(response_data)
+        user = User.objects.get(username=user)
+        comment = Comment(user=user, post=Post.objects.get(id=id), comment=text)
         comment.save()
-        messages.success(request, "Comment Successfully posted.")
-        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+        return JsonResponse({
+            "message" : "Comment Successfully posted."
+        })
+
+def comment(request, postId):
+    comments = Comment.objects.filter(post__id=postId).order_by('-time')
+    return JsonResponse([comment.serialize() for comment in comments], safe=False)

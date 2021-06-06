@@ -23,3 +23,6 @@ urlpatterns = [
     path('', include("eduHub.urls"))
 ]
 urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+admin.site.site_header = "eduHub"
+admin.site.site_title = "eduHub"
+admin.site.index_title = "Welcome to Admin Panel"
