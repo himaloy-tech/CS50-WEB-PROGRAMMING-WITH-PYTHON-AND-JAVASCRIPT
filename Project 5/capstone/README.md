@@ -1,7 +1,7 @@
 # eduHub
 # An Educational Hub for Students
 
-Link for the video - https://www.youtube.com/watch?v=KUbVLWVkFNU
+Link for the video - https://www.youtube.com/watch?v=KUbVLWVkFNU <br>
 Website Link - https://eduhub-app-live.herokuapp.com/
 
 ### Specification
