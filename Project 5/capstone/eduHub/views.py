@@ -36,8 +36,12 @@ def register(request):
     if request.method == "POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = User.objects.create_user(username=username, password=password)
-        user.save()
+        try:
+            user = User.objects.create_user(username=username, password=password)
+            user.save()
+        except:
+            messages.error(request, f'Username <b>{username}</b> already exists.')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         auth_login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:
