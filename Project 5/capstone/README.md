@@ -1,6 +1,8 @@
 # eduHub
 # An Educational Hub for Students
 
+Link for the video - https://www.youtube.com/watch?v=KUbVLWVkFNU
+Website Link - https://eduhub-app-live.herokuapp.com/
 
 ### Specification
 1. Authentication
